@@ -1,20 +1,20 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.10
+# Use the latest official Python image as a base
+FROM python:latest
 
-WORKDIR /app/
+# Install Poetry using pip
+RUN pip install poetry uvicorn
 
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
-    cd /usr/local/bin && \
-    ln -s /opt/poetry/bin/poetry && \
-    poetry config virtualenvs.create false
+# Set the working directory
+WORKDIR /app
 
-COPY ./pyproject.toml ./poetry.lock* /app/
+# Copy the application files
+COPY . .
 
-RUN poetry install --no-root --only main
+# Install dependencies using Poetry
+RUN poetry install
 
-ENV PYTHONPATH=/app
+# Expose the port FastAPI runs on
+EXPOSE 80
 
-COPY ./alembic.ini /app/
-
-COPY ./prestart.sh /app/
-
-COPY ./app /app/app
+# Run the prestart script and start the server
+CMD ["sh", "-c", "poetry run bash ./prestart.sh && poetry run uvicorn app.main:app --host 0.0.0.0 --port 80 --reload"]
