@@ -66,8 +66,8 @@ To get started with this template, please follow the instructions in the respect
     
    
     
-    `git clone https://github.com/your-username/your-repo.git
-    cd your-repo` 
+    `git clone https://github.com/Laban254/devops-stage-2
+    cd Laban254/devops-stage-2` 
     
 2.  **Build and start the services:**
     
