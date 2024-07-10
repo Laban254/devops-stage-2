@@ -5,10 +5,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
     ports:
       - "5173:80"
-    env_file:
-      - ./frontend/.env
 
   backend:
     build:
@@ -18,15 +18,27 @@ services:
       - "8000:80"
     depends_on:
       - postgres
-    env_file:
-      - ./backend/.env
+    environment:
+      - BACKEND_CORS_ORIGINS="http://localhost,http://localhost:5173,https://localhost,https://localhost:5173"
+      - SECRET_KEY=changethis123
+      - PROJECT_NAME=Full Stack FastAPI Project
+      - FIRST_SUPERUSER=devops@hng.tech
+      - FIRST_SUPERUSER_PASSWORD=devops#HNG11
+      - USERS_OPEN_REGISTRATION=True
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=db
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
 
   postgres:
     image: 'postgres:15'
     ports:
       - "5432:5432"
-    env_file:
-      - ./backend/.env
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
 
   proxy:
     image: 'jc21/nginx-proxy-manager:latest'
